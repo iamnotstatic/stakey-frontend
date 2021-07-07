@@ -1,9 +1,16 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import useDarkMode from './hooks/useDarkMode';
+import Navbar from './components/Navbar';
 
-function App() {
-  return <div>Hello</div>;
-}
+const App = () => {
+  const [colorTheme, setTheme] = useDarkMode();
+
+  return (
+    <div className="w-full dark:bg-gray-800">
+      <Navbar />
+      
+    </div>
+  );
+};
 
 export default App;
