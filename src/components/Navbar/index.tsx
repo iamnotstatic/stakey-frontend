@@ -18,7 +18,7 @@ const Navbar = () => {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-              <button className="bg-gray-100 dark:bg-gray-50 dark:text-gray-600  py-1 px-3 text-sm rounded-md text-gray-600 hover:text-gray-800 dark:hover:text-black focus:outline-none ">
+              <button className="bg-gray-100 dark:bg-gray-50 dark:text-gray-800  py-1 px-3 text-sm rounded-md text-gray-600 hover:text-gray-800 dark:hover:text-black focus:outline-none ">
                 Connect to a Wallet 
               </button>
               {/* Profile dropdown */}
