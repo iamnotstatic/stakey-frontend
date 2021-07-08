@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+import { loadEthers } from '../../store/interactions';
+import { useAppSelector, useAppDispatch } from '../../hooks';
 
 const Stake = () => {
+  const { intraction } = useAppSelector((state: any) => state);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(loadEthers());
+  });
   return (
-    <div className="bg-gray-100 mx-auto max-w-lg shadow-lg rounded overflow-hidden p-4 sm:flex dark:bg-gray-800 mt-20">
+    <div className="bg-gray-100 mx-auto max-w-lg shadow-lg dark:shadow-2xl rounded overflow-hidden p-4 sm:flex dark:bg-gray-800 mt-20">
       <form className="w-full p-5">
         <div className="mt-4">
           <div className="flex justify-between">
@@ -14,7 +24,8 @@ const Stake = () => {
               className="block text-gray-700 text-sm font-bold mb-2 text-left dark:text-gray-50"
               htmlFor="amount"
             >
-              Balance: 38.7 Dai <span className="text-blue-300 cursor-pointer">(Max)</span>
+              Balance: 38.7 Dai{' '}
+              <span className="text-blue-300 cursor-pointer">(Max)</span>
             </label>
           </div>
 
@@ -26,8 +37,12 @@ const Stake = () => {
           />
         </div>
         <div className="flex justify-between mt-6">
-          <button className="bg-gray-400 py-4 px-6 rounded-lg text-gray-50">Approve</button>
-          <button className="bg-blue-300 py-4 px-8 rounded-lg text-gray-50">Stake</button>
+          <button className="bg-gray-400 py-4 px-6 rounded-lg text-gray-50">
+            Approve
+          </button>
+          <button className="bg-blue-300 py-4 px-8 rounded-lg text-gray-50">
+            Stake
+          </button>
         </div>
       </form>
     </div>
