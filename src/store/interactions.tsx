@@ -11,8 +11,9 @@ const slice = createSlice({
   initialState: {
     ethers: {},
     signer: {},
-    farm: {},
-    erc20: {},
+    farm: null,
+    dai: null,
+    stakey: null,
     data: null,
   },
   reducers: {
@@ -25,18 +26,18 @@ const slice = createSlice({
     },
     initContracts: (state, action: any) => {
       state.farm = action.farm;
-      state.erc20 = action.erc20;
+      state.dai = action.dai;
+      state.stakey = action.stakey;
     },
 
-    intAccount: (state: any, action) => {
+    intData: (state: any, action) => {
       state.data = action.payload;
     },
   },
 });
 export default slice.reducer;
 
-export const { initEthers, initMetamask, initContracts, intAccount } =
-  slice.actions;
+export const { initEthers, initMetamask, intData } = slice.actions;
 
 export const loadEthers = () => async (dispatch: any) => {
   dispatch(initEthers({ provider, signer: provider.getSigner() }));
@@ -52,21 +53,28 @@ export const enableMetamask = () => async (dispatch: any) => {
   }
 };
 
-export const loadContracts = () => async (dispatch: any) => {
+export const loadData = (network?: string) => async (dispatch: any) => {
   const farm = new ethers.Contract(
     process.env.REACT_APP_FARM_CONTRACT_ADDRESS as string,
     Farm,
     provider
   );
+  const dai = new ethers.Contract(
+    process.env.REACT_APP_DAI_CONTRACT_ADDRESS as string,
+    Erc20,
+    provider
+  );
 
-  dispatch(initContracts({ farm }));
-};
-
-export const loadAccount = (network?: string) => async (dispatch: any) => {
+  const stakey = new ethers.Contract(
+    process.env.REACT_APP_STAKEY_CONTRACT_ADDRESS as string,
+    Erc20,
+    provider
+  );
   const signer = provider.getSigner();
+
   try {
     const address = await signer.getAddress();
-    dispatch(intAccount({ address, network }));
+    dispatch(intData({ address, network, farm, dai, stakey }));
   } catch (error) {
     console.log('Metamask not connected');
   }
