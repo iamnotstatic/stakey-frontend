@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import interactionReducer from './interactions';
 
 const reducer = combineReducers({
-  intraction: interactionReducer,
+  interaction: interactionReducer,
 });
 const store = configureStore({
   reducer,

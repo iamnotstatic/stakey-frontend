@@ -1,7 +1,14 @@
 import React from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { enableMetamask } from '../../store/interactions';
 import useDarkMode from '../../hooks/useDarkMode';
 const Navbar = () => {
   const [colorTheme, setTheme] = useDarkMode();
+
+  const { interaction } = useAppSelector((state: any) => state);
+
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -18,9 +25,30 @@ const Navbar = () => {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-              <button className="bg-gray-100 dark:bg-gray-50 dark:text-gray-800  py-1 px-3 text-sm rounded-md text-gray-600 hover:text-gray-800 dark:hover:text-black focus:outline-none ">
-                Connect to a Wallet 
-              </button>
+              {interaction.data !== null ? (
+                <p className="truncate w-40 text-gray-600 text-sm dark:text-gray-300">
+                  <span className="bg-gradient-to-l from-gray-400 to-gray-300 text-gray-700 p-3 rounded-md">
+                    {interaction.data.network === '0x4'
+                      ? 'Rinkeby'
+                      : interaction.data.network === '0x2a'
+                      ? 'Kovan'
+                      : interaction.data.network === '0x3'
+                      ? 'Ropsten'
+                      : interaction.data.network === '0x5'
+                      ? 'Goerli'
+                      : null}
+                  </span>{' '}
+                  {interaction.data.address}
+                </p>
+              ) : (
+                <button
+                  className="bg-gray-100 dark:bg-gray-50 dark:text-gray-800  py-1 px-3 text-sm rounded-md text-gray-600 hover:text-gray-800 dark:hover:text-black focus:outline-none"
+                  onClick={() => dispatch(enableMetamask())}
+                >
+                  Connect to a Wallet
+                </button>
+              )}
+
               {/* Profile dropdown */}
               <div className="ml-3 relative">
                 <button onClick={() => setTheme(colorTheme)} className="block">

@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react';
 
-import { loadEthers } from '../../store/interactions';
+import {  } from '../../store/interactions';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 
 const Stake = () => {
-  const { intraction } = useAppSelector((state: any) => state);
+  const { interaction } = useAppSelector((state: any) => state);
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(loadEthers());
-  });
+  useEffect(() => {});
   return (
     <div className="bg-gray-100 mx-auto max-w-lg shadow-lg dark:shadow-2xl rounded overflow-hidden p-4 sm:flex dark:bg-gray-800 mt-20">
       <form className="w-full p-5">
