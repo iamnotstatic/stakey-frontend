@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ethers } from 'ethers';
-
+import { fromWei } from '../utils';
 import Farm from '../abis/farm.json';
 import Erc20 from '../abis/erc20.json';
 
@@ -11,9 +11,6 @@ const slice = createSlice({
   initialState: {
     ethers: {},
     signer: {},
-    farm: null,
-    dai: null,
-    stakey: null,
     data: null,
   },
   reducers: {
@@ -24,12 +21,6 @@ const slice = createSlice({
     initMetamask: (state) => {
       console.log(state);
     },
-    initContracts: (state, action: any) => {
-      state.farm = action.farm;
-      state.dai = action.dai;
-      state.stakey = action.stakey;
-    },
-
     intData: (state: any, action) => {
       state.data = action.payload;
     },
@@ -74,8 +65,32 @@ export const loadData = (network?: string) => async (dispatch: any) => {
 
   try {
     const address = await signer.getAddress();
-    dispatch(intData({ address, network, farm, dai, stakey }));
+
+    // Get  DAI Balance
+    const initDaiBalance = await dai.balanceOf(address);
+    const daiBalance = fromWei(initDaiBalance, 18);
+
+    // Get Stakey Balance
+    const initStakeyBalance = await stakey.balanceOf(address);
+    const stakeyBalance = fromWei(initStakeyBalance, 18);
+
+    // Get Staking Balance
+    const initStakingBalance = await farm.stakingBalance(address);
+    const stakingBalance = fromWei(initStakingBalance, 18);
+
+    dispatch(
+      intData({
+        address,
+        network,
+        farm,
+        dai,
+        stakey,
+        daiBalance,
+        stakeyBalance,
+        stakingBalance,
+      })
+    );
   } catch (error) {
-    console.log('Metamask not connected');
+    console.log('Metamask not connected', error.message);
   }
 };

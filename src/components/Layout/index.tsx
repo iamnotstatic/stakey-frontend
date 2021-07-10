@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { ToastContainer } from 'react-toastify';
 import 'react-tabs/style/react-tabs.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { useAppDispatch } from '../../hooks';
 import { loadEthers, loadData } from '../../store/interactions';
@@ -41,6 +43,7 @@ const Layout = () => {
           <Unstake />
         </TabPanel>
       </Tabs>
+      <ToastContainer />
     </div>
   );
 };
