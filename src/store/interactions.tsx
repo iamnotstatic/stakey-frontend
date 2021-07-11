@@ -73,6 +73,7 @@ export const loadData = () => async (dispatch: any) => {
     const initStakingBalance = await farm.methods
       .stakingBalance(address[0])
       .call();
+
     const stakingBalance = fromWei(initStakingBalance);
 
     dispatch(

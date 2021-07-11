@@ -22,7 +22,7 @@ const Stake = () => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
-  const expectedBlockTime = 5000;
+  const expectedBlockTime = 10000;
 
   const onStake = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,8 +39,6 @@ const Stake = () => {
               await interaction.web3.eth.getTransactionReceipt(hash);
             await sleep(expectedBlockTime);
           }
-
-          console.log(transactionReceipt);
 
           setApproveLoading(false);
           setApproveStatus(false);
@@ -72,6 +70,7 @@ const Stake = () => {
         });
     } catch (error) {
       setStakeStatus(true);
+      setStakeLoading(false);
       setApproveStatus(false);
     }
   };
@@ -104,8 +103,6 @@ const Stake = () => {
                 await interaction.web3.eth.getTransactionReceipt(hash);
               await sleep(expectedBlockTime);
             }
-
-            console.log(transactionReceipt);
 
             setApproveLoading(false);
             setApproveStatus(true);
@@ -169,7 +166,7 @@ const Stake = () => {
             name="amount"
             type="number"
             value={amount}
-            placeholder="0"
+            placeholder="0.0"
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
