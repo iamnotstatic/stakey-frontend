@@ -28,7 +28,7 @@ const Navbar = () => {
               {interaction.data !== null ? (
                 <p className="truncate w-40 text-gray-600 text-sm dark:text-gray-300">
                   <span className="bg-gradient-to-l from-gray-400 to-gray-300 text-gray-700 p-3 rounded-md">
-                    {interaction.data.network === '0x4'
+                    {interaction.data.network === 4
                       ? 'Rinkeby'
                       : interaction.data.network === '0x2a'
                       ? 'Kovan'

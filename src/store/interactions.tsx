@@ -1,22 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ethers } from 'ethers';
+import Web3 from 'web3';
 import { fromWei } from '../utils';
 import Farm from '../abis/farm.json';
 import Erc20 from '../abis/erc20.json';
 
-const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+const provider = new Web3(Web3.givenProvider || 'ws://localhost:8545');
 
 const slice = createSlice({
   name: 'interactions',
   initialState: {
-    ethers: {},
-    signer: {},
+    web3: {},
     data: null,
   },
   reducers: {
-    initEthers: (state, action) => {
-      state.ethers = action.payload.provider;
-      state.signer = action.payload.signer;
+    initWeb3: (state, action) => {
+      state.web3 = action.payload.provider;
     },
     initMetamask: (state) => {
       console.log(state);
@@ -28,10 +26,10 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-export const { initEthers, initMetamask, intData } = slice.actions;
+export const { initWeb3, initMetamask, intData } = slice.actions;
 
-export const loadEthers = () => async (dispatch: any) => {
-  dispatch(initEthers({ provider, signer: provider.getSigner() }));
+export const loadWeb3 = () => async (dispatch: any) => {
+  dispatch(initWeb3({ provider }));
 };
 export const enableMetamask = () => async (dispatch: any) => {
   try {
@@ -44,43 +42,42 @@ export const enableMetamask = () => async (dispatch: any) => {
   }
 };
 
-export const loadData = (network?: string) => async (dispatch: any) => {
-  const farm = new ethers.Contract(
-    process.env.REACT_APP_FARM_CONTRACT_ADDRESS as string,
-    Farm,
-    provider
+export const loadData = () => async (dispatch: any) => {
+  const farm = new provider.eth.Contract(
+    Farm as any,
+    process.env.REACT_APP_FARM_CONTRACT_ADDRESS as string
   );
-  const dai = new ethers.Contract(
-    process.env.REACT_APP_DAI_CONTRACT_ADDRESS as string,
-    Erc20,
-    provider
+  const dai = new provider.eth.Contract(
+    Erc20 as any,
+    process.env.REACT_APP_DAI_CONTRACT_ADDRESS as string
   );
 
-  const stakey = new ethers.Contract(
-    process.env.REACT_APP_STAKEY_CONTRACT_ADDRESS as string,
-    Erc20,
-    provider
+  const stakey = new provider.eth.Contract(
+    Erc20 as any,
+    process.env.REACT_APP_STAKEY_CONTRACT_ADDRESS as string
   );
-  const signer = provider.getSigner();
 
   try {
-    const address = await signer.getAddress();
+    const address = await provider.eth.getAccounts();
+    const network = await provider.eth.net.getId();
 
     // Get  DAI Balance
-    const initDaiBalance = await dai.balanceOf(address);
-    const daiBalance = fromWei(initDaiBalance, 18);
+    const initDaiBalance = await dai.methods.balanceOf(address[0]).call();
+    const daiBalance = fromWei(initDaiBalance);
 
     // Get Stakey Balance
-    const initStakeyBalance = await stakey.balanceOf(address);
-    const stakeyBalance = fromWei(initStakeyBalance, 18);
+    const initStakeyBalance = await stakey.methods.balanceOf(address[0]).call();
+    const stakeyBalance = fromWei(initStakeyBalance);
 
     // Get Staking Balance
-    const initStakingBalance = await farm.stakingBalance(address);
-    const stakingBalance = fromWei(initStakingBalance, 18);
+    const initStakingBalance = await farm.methods
+      .stakingBalance(address[0])
+      .call();
+    const stakingBalance = fromWei(initStakingBalance);
 
     dispatch(
       intData({
-        address,
+        address: address[0],
         network,
         farm,
         dai,

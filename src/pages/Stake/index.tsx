@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { toWei, fromWei } from '../../utils';
-import {} from '../../store/interactions';
+import { loadData } from '../../store/interactions';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 
 import check from '../../assets/imgs/check.svg';
@@ -18,28 +18,48 @@ const Stake = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (interaction.data !== null) {
-      let filter = interaction.data.dai.filters.Approval(
-        interaction.data.address,
-        null
-      );
+  const sleep = (milliseconds: number) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  };
 
-      interaction.data.dai.on(
-        filter,
-        (owner: string, spender: string, amount: string, event: any) => {
-          console.log(event);
+  const expectedBlockTime = 5000;
+
+  const onStake = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setStakeLoading(true);
+      await interaction.data.farm.methods
+        .deposit(toWei(amount))
+        .send({ from: interaction.data.address })
+        .on('transactionHash', async (hash: string) => {
+          let transactionReceipt = null;
+          while (transactionReceipt == null) {
+            transactionReceipt =
+              await interaction.web3.eth.getTransactionReceipt(hash);
+            await sleep(expectedBlockTime);
+          }
+
+          console.log(transactionReceipt);
+
+          setApproveLoading(false);
+          setApproveStatus(false);
+          setStakeStatus(true);
+          setStakeLoading(false);
+          setAmount('0.0');
+          dispatch(loadData());
+
           toast.dark(
             <div className="flex">
               <div className="">
                 <img src={check} alt="check" className="w-7 mt-2" />
               </div>
               <div className="">
-                <span className="ml-4 font-bold">Approve DAI</span>
+                <span className="ml-4 font-bold">Staked {amount} DAI</span>
                 <br />
                 <a
                   className="ml-4 text-blue-600 text-sm hover:text-blue-500"
-                  href={`${process.env.REACT_APP_EXPLORER_URL}${event.transactionHash}`}
+                  href={`${process.env.REACT_APP_EXPLORER_URL}${hash}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -49,39 +69,72 @@ const Stake = () => {
               <br />
             </div>
           );
-
-          setApproveLoading(false);
-          setApproveStatus(true);
-          setStakeStatus(false);
-        }
-      );
+        });
+    } catch (error) {
+      setStakeStatus(true);
+      setApproveStatus(false);
     }
-  });
-
-  const onStake = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    toast('Clicked');
   };
 
-  const onApprove = async (e: any) => {
+  const onApprove = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const balance = await interaction.data.dai.allowance(
-      interaction.data.address,
-      process.env.REACT_APP_FARM_CONTRACT_ADDRESS
-    );
+    const balance = await interaction.data.dai.methods
+      .allowance(
+        interaction.data.address,
+        process.env.REACT_APP_FARM_CONTRACT_ADDRESS
+      )
+      .call();
 
-    if (parseFloat(fromWei(balance, 18)) >= parseFloat(amount)) {
-      console.log('here');
-    } else {
-      setApproveLoading(true);
-      const daiWithSigner = interaction.data.dai.connect(interaction.signer);
+    try {
+      if (parseFloat(fromWei(balance)) >= parseFloat(amount)) {
+        setApproveLoading(false);
+        setApproveStatus(true);
+        setStakeStatus(false);
+      } else {
+        setApproveLoading(true);
 
-      daiWithSigner.approve(
-        process.env.REACT_APP_FARM_CONTRACT_ADDRESS,
-        toWei(amount, 18)
-      );
+        await interaction.data.dai.methods
+          .approve(process.env.REACT_APP_FARM_CONTRACT_ADDRESS, toWei(amount))
+          .send({ from: interaction.data.address })
+          .on('transactionHash', async (hash: string) => {
+            let transactionReceipt = null;
+            while (transactionReceipt == null) {
+              transactionReceipt =
+                await interaction.web3.eth.getTransactionReceipt(hash);
+              await sleep(expectedBlockTime);
+            }
+
+            console.log(transactionReceipt);
+
+            setApproveLoading(false);
+            setApproveStatus(true);
+            setStakeStatus(false);
+
+            toast.dark(
+              <div className="flex">
+                <div className="">
+                  <img src={check} alt="check" className="w-7 mt-2" />
+                </div>
+                <div className="">
+                  <span className="ml-4 font-bold">Approve DAI</span>
+                  <br />
+                  <a
+                    className="ml-4 text-blue-600 text-sm hover:text-blue-500"
+                    href={`${process.env.REACT_APP_EXPLORER_URL}${hash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View on Explorer
+                  </a>
+                </div>
+                <br />
+              </div>
+            );
+          });
+      }
+    } catch (error) {
+      setApproveLoading(false);
     }
   };
 

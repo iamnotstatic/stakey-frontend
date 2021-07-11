@@ -5,7 +5,7 @@ import 'react-tabs/style/react-tabs.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useAppDispatch } from '../../hooks';
-import { loadEthers, loadData } from '../../store/interactions';
+import { loadWeb3, loadData } from '../../store/interactions';
 import Navbar from '../Navbar';
 import Stake from '../../pages/Stake';
 import Unstake from '../../pages/Unstake';
@@ -14,11 +14,11 @@ const Layout = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(loadEthers());
+    dispatch(loadWeb3());
     dispatch(loadData());
 
     (window as any).ethereum.on('chainChanged', async (network: string) => {
-      dispatch(loadData(network));
+      dispatch(loadData());
     });
 
     (window as any).ethereum.on('accountsChanged', async (accounts: any) => {

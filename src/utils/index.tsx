@@ -1,10 +1,10 @@
-import { ethers } from 'ethers';
+import web3 from 'web3';
 
-export const fromWei = (wei: string, decimals: number) => {
-  return ethers.utils.formatUnits(wei, decimals);
+export const fromWei = (wei: string) => {
+  return web3.utils.fromWei(wei, 'ether');
 };
 
-export const toWei = (wei: string, decimals: number) => {
-  return ethers.utils.parseUnits(wei, decimals);
+export const toWei = (wei: string) => {
+  return web3.utils.toWei(wei, 'ether');
 };
 
