@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 
-import { toWei, fromWei } from '../../utils';
+import { toWei, fromWei, showAlert } from '../../utils';
 import { loadData } from '../../store/interactions';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-
-import check from '../../assets/imgs/check.svg';
 
 const Stake = () => {
   const [amount, setAmount] = useState('0.0');
@@ -47,26 +44,7 @@ const Stake = () => {
           setAmount('0.0');
           dispatch(loadData());
 
-          toast.dark(
-            <div className="flex">
-              <div className="">
-                <img src={check} alt="check" className="w-7 mt-2" />
-              </div>
-              <div className="">
-                <span className="ml-4 font-bold">Staked {amount} DAI</span>
-                <br />
-                <a
-                  className="ml-4 text-blue-600 text-sm hover:text-blue-500"
-                  href={`${process.env.REACT_APP_EXPLORER_URL}${hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View on Explorer
-                </a>
-              </div>
-              <br />
-            </div>
-          );
+          showAlert(`Staked ${amount} DAI`, hash);
         });
     } catch (error) {
       setStakeStatus(true);
@@ -108,26 +86,7 @@ const Stake = () => {
             setApproveStatus(true);
             setStakeStatus(false);
 
-            toast.dark(
-              <div className="flex">
-                <div className="">
-                  <img src={check} alt="check" className="w-7 mt-2" />
-                </div>
-                <div className="">
-                  <span className="ml-4 font-bold">Approve DAI</span>
-                  <br />
-                  <a
-                    className="ml-4 text-blue-600 text-sm hover:text-blue-500"
-                    href={`${process.env.REACT_APP_EXPLORER_URL}${hash}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View on Explorer
-                  </a>
-                </div>
-                <br />
-              </div>
-            );
+            showAlert('Aprove DAI', hash);
           });
       }
     } catch (error) {
@@ -144,7 +103,8 @@ const Stake = () => {
               className="block text-gray-700 text-sm font-bold mb-2 text-left dark:text-gray-50"
               htmlFor="amount"
             >
-              {interaction.data && interaction.data.stakeyBalance} Stakey
+              {interaction.data && interaction.data.stakeyBalance}{' '}
+              Stakey
             </label>
             <label
               className="block text-gray-700 text-sm font-bold mb-2 text-left dark:text-gray-50"

@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 
-import { toast } from 'react-toastify';
-
-import { toWei } from '../../utils';
+import { toWei, showAlert } from '../../utils';
 import { loadData } from '../../store/interactions';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-
-import check from '../../assets/imgs/check.svg';
 
 const Unstake = () => {
   const [amount, setAmount] = useState('0.0');
@@ -41,26 +37,7 @@ const Unstake = () => {
           setAmount('0.0');
           dispatch(loadData());
 
-          toast.dark(
-            <div className="flex">
-              <div className="">
-                <img src={check} alt="check" className="w-7 mt-2" />
-              </div>
-              <div className="">
-                <span className="ml-4 font-bold">Unstaked {amount} DAI</span>
-                <br />
-                <a
-                  className="ml-4 text-blue-600 text-sm hover:text-blue-500"
-                  href={`${process.env.REACT_APP_EXPLORER_URL}${hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View on Explorer
-                </a>
-              </div>
-              <br />
-            </div>
-          );
+          showAlert(`Withdrawn ${amount} DAI`, hash);
         });
     } catch (error) {
       console.log(error);
