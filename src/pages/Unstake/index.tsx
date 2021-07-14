@@ -54,14 +54,18 @@ const Unstake = () => {
               className="block text-gray-700 text-sm font-bold mb-2 text-left dark:text-gray-50"
               htmlFor="amount"
             >
-              {interaction.data && interaction.data.daiBalance} Dai
+              {interaction.data &&
+                parseFloat(interaction.data.daiBalance).toFixed(2)}{' '}
+              Dai
             </label>
             <label
               className="block text-gray-700 text-sm font-bold mb-2 text-left dark:text-gray-50"
               htmlFor="amount"
             >
               Staking Balance:{' '}
-              {interaction.data && interaction.data.stakingBalance} Dai
+              {interaction.data &&
+                parseFloat(interaction.data.stakingBalance).toFixed(2)}{' '}
+              Dai
               <span
                 className="text-blue-300 cursor-pointer"
                 onClick={() => setAmount(interaction.data.stakingBalance)}
@@ -72,7 +76,7 @@ const Unstake = () => {
           </div>
 
           <input
-            className="shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full py-5 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline"
             id="amount"
             type="number"
             value={amount}

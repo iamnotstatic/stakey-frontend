@@ -23,7 +23,7 @@ export const showAlert = (title: string, hash: string) => {
         <br />
         <a
           className="ml-4 text-blue-600 text-sm hover:text-blue-500"
-          href={`${process.env.REACT_APP_EXPLORER_URL}${hash}`}
+          href={`${process.env.REACT_APP_EXPLORER_URL}tx/${hash}`}
           target="_blank"
           rel="noreferrer"
         >

@@ -29,21 +29,23 @@ const Layout = () => {
     });
   }, [dispatch]);
   return (
-    <div className="font-mono">
+    <div className="flex flex-col h-screen font-mono">
       <Navbar />
-      <Tabs className="text-center mt-8 text-sm">
-        <TabList className="shadow-lg p-4 dark:bg-gray-800 dark:text-gray-100">
-          <Tab>Stake</Tab>
-          <Tab>Withdraw</Tab>
-        </TabList>
+      <main className="flex-grow">
+        <Tabs className="text-center mt-8 text-sm">
+          <TabList className="shadow-lg p-4 dark:bg-gray-800 dark:text-gray-100">
+            <Tab>Stake</Tab>
+            <Tab>Withdraw</Tab>
+          </TabList>
 
-        <TabPanel className="mt-5">
-          <Stake />
-        </TabPanel>
-        <TabPanel>
-          <Unstake />
-        </TabPanel>
-      </Tabs>
+          <TabPanel className="mt-5">
+            <Stake />
+          </TabPanel>
+          <TabPanel>
+            <Unstake />
+          </TabPanel>
+        </Tabs>
+      </main>
       <ToastContainer />
       <Foooter />
     </div>

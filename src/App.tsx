@@ -7,7 +7,7 @@ import Layout from './components/Layout';
 const App = () => {
   return (
     <Provider store={store}>
-      <Layout />;
+      <Layout />
     </Provider>
   );
 };
