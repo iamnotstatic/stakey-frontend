@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch } from '../../hooks';
 import { loadWeb3, loadData } from '../../store/interactions';
 import Navbar from '../Navbar';
+import Foooter from '../Footer';
 import Stake from '../../pages/Stake';
 import Unstake from '../../pages/Unstake';
 
@@ -44,6 +45,7 @@ const Layout = () => {
         </TabPanel>
       </Tabs>
       <ToastContainer />
+      <Foooter />
     </div>
   );
 };
