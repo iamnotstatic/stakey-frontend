@@ -47,15 +47,22 @@ export const loadData = () => async (dispatch: any) => {
     Farm as any,
     process.env.REACT_APP_FARM_CONTRACT_ADDRESS as string
   );
+
+  console.log(process.env.REACT_APP_FARM_CONTRACT_ADDRESS);
+
   const dai = new provider.eth.Contract(
     Erc20 as any,
     process.env.REACT_APP_DAI_CONTRACT_ADDRESS as string
   );
 
+  console.log(process.env.REACT_APP_DAI_CONTRACT_ADDRESS);
+
   const stakey = new provider.eth.Contract(
     Erc20 as any,
     process.env.REACT_APP_STAKEY_CONTRACT_ADDRESS as string
   );
+
+  console.log(process.env.REACT_APP_STAKEY_CONTRACT_ADDRESS);
 
   try {
     const address = await provider.eth.getAccounts();
